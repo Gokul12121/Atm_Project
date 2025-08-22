@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.atm.demo.AtmApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 31.20 s -- in com.atm.demo.AtmApplicationTests
