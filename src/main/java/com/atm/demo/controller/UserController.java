@@ -41,4 +41,28 @@ public class UserController {
 
     }
 
+    @PostMapping("/deposit")
+    public String deposit(@RequestParam String cardNumber,  @RequestParam Double amount){
+        Double updatedBalance = userService.deposit(cardNumber,amount);
+        return "Deposit successfull! New Balance: "+updatedBalance;
+    }
+
+    @PostMapping("/reset-pin")
+    public String resetPin(@RequestParam String cardNumber,
+                           @RequestParam String oldPin,
+                           @RequestParam String newPin) {
+        return userService.resetPin(cardNumber, oldPin, newPin);
+    }
+
+    @PostMapping("/add")
+    public String addUser(@RequestParam String cardNumber,
+                          @RequestParam String pin,
+                          @RequestParam Double balance) {
+        return userService.addUser(cardNumber, pin, balance);
+    }
+
+
+
+
+
 }
