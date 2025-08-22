@@ -11,11 +11,11 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public String addUser(String cardNumber, String pin, Double balance) {
+    public String addUser(String accNumber, String pin, Double balance) {
 
-        if (!"admin123".equals(cardNumber)) {
+        if (!"admin123".equals(accNumber)) {
             // Otherwise must be exactly 8 digits
-            if (cardNumber == null || !cardNumber.matches("\\d{8}")) {
+            if (accNumber == null || !accNumber.matches("\\d{8}")) {
                 throw new RuntimeException("Card number must be 8 digits or 'admin123'.");
             }
         }
@@ -25,7 +25,7 @@ public class UserService {
         }
 
         User user = new User();
-        user.setCardNumber(cardNumber);
+        user.setAccNumber(accNumber);
         user.setPin(pin);
         user.setBalance(balance);
         user.setRole("USER"); // default role
@@ -37,33 +37,33 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> login(String cardNumber, String pin) {
-        Optional<User> user = userRepository.findByCardNumber(cardNumber);
+    public Optional<User> login(String accNumber, String pin) {
+        Optional<User> user = userRepository.findByAccNumber(accNumber);
         if (user.isPresent() && user.get().getPin().equals(pin)) {
             return user;
         }
         return Optional.empty();
     }
 
-    public Double getBalance(String cardNumber) {
-        Optional<User> user = userRepository.findByCardNumber(cardNumber);
+    public Double getBalance(String accNumber) {
+        Optional<User> user = userRepository.findByAccNumber(accNumber);
         if (user.isPresent()) {
             return user.get().getBalance();
         }
-        throw new RuntimeException("User not found with card number: " + cardNumber);
+        throw new RuntimeException("User not found with card number: " + accNumber);
     }
 
 
 
-    public Double withdraw(String cardNumber, Double amount) {
-        Optional<User> userOptional = userRepository.findByCardNumber(cardNumber);
+    public Double withdraw(String accNumber, Double amount) {
+        Optional<User> userOptional = userRepository.findByAccNumber(accNumber);
         if (userOptional.isEmpty()) {
-            throw new RuntimeException("User not found with card number: "+cardNumber);
+            throw new RuntimeException("User not found with card number: "+accNumber);
         }
 
         User user = userOptional.get();
 
-        if (amount > getBalance(cardNumber)) {
+        if (amount > getBalance(accNumber)) {
             throw new RuntimeException("The amount you have entered exceeds the balance");
         }
 
@@ -74,10 +74,10 @@ public class UserService {
         return user.getBalance();
     }
 
-    public Double deposit(String cardNumber, Double amount){
-        Optional<User> userOptional = userRepository.findByCardNumber(cardNumber);
+    public Double deposit(String accNumber, Double amount){
+        Optional<User> userOptional = userRepository.findByAccNumber(accNumber);
         if(userOptional.isEmpty()){
-            throw new RuntimeException("User not found with account number:"+cardNumber);
+            throw new RuntimeException("User not found with account number:"+accNumber);
         }
         User user = userOptional.get();
 
@@ -92,11 +92,11 @@ public class UserService {
         return user.getBalance();
     }
 
-    public String resetPin(String cardNumber, String oldPin, String newPin) {
-        Optional<User> userOptional = userRepository.findByCardNumber(cardNumber);
+    public String resetPin(String accNumber, String oldPin, String newPin) {
+        Optional<User> userOptional = userRepository.findByAccNumber(accNumber);
 
         if (userOptional.isEmpty()) {
-            throw new RuntimeException("User not found with card number: " + cardNumber);
+            throw new RuntimeException("User not found with card number: " + accNumber);
         }
 
         User user = userOptional.get();
@@ -110,10 +110,10 @@ public class UserService {
 
         return "PIN updated successfully!";
     }
-    public void deleteUser(String cardNumber) {
-        Optional<User> user = userRepository.findByCardNumber(cardNumber);
+    public void deleteUser(String accNumber) {
+        Optional<User> user = userRepository.findByAccNumber(accNumber);
         if (user.isEmpty()) {
-            throw new RuntimeException("User not found with card number: " + cardNumber);
+            throw new RuntimeException("User not found with card number: " + accNumber);
         }
         userRepository.delete(user.get());
     }

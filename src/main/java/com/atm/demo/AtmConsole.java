@@ -45,7 +45,7 @@ public class AtmConsole implements CommandLineRunner {
 
             //  if choice == 1
             System.out.print("Enter account number: ");
-            String cardNumber = scanner.nextLine();
+            String accNumber = scanner.nextLine();
 
             String pin;
 
@@ -59,7 +59,7 @@ public class AtmConsole implements CommandLineRunner {
                 pin = scanner.nextLine();
             }
 
-            Optional<User> loggedInUser = userService.login(cardNumber, pin);
+            Optional<User> loggedInUser = userService.login(accNumber, pin);
             if (loggedInUser.isEmpty()) {
                 System.out.println("Invalid account number or PIN.");
                 continue;
@@ -71,12 +71,12 @@ public class AtmConsole implements CommandLineRunner {
             if ("ADMIN".equalsIgnoreCase(user.getRole())) {
                 showAdminMenu(scanner);
             } else {
-                showUserMenu(scanner, user.getCardNumber());
+                showUserMenu(scanner, user.getAccNumber());
             }
         }
     }
 
-    private void showUserMenu(Scanner scanner, String cardNumber) {
+    private void showUserMenu(Scanner scanner, String accNumber) {
         boolean session = true;
         while (session) {
             System.out.println("\n--- ATM MENU ---");
@@ -91,7 +91,7 @@ public class AtmConsole implements CommandLineRunner {
 
             switch (atmChoice) {
                 case 1:
-                    Double balance = userService.getBalance(cardNumber);
+                    Double balance = userService.getBalance(accNumber);
                     System.out.println("Your balance is: " + balance);
                     break;
 
@@ -100,7 +100,7 @@ public class AtmConsole implements CommandLineRunner {
                     Double withdrawAmount = scanner.nextDouble();
                     scanner.nextLine();
                     try {
-                        Double newBalance = userService.withdraw(cardNumber, withdrawAmount);
+                        Double newBalance = userService.withdraw(accNumber, withdrawAmount);
                         System.out.println("Withdrawal successful! New balance: " + newBalance);
                     } catch (RuntimeException e) {
                         System.out.println("Error: " + e.getMessage());
@@ -112,7 +112,7 @@ public class AtmConsole implements CommandLineRunner {
                     Double depositAmount = scanner.nextDouble();
                     scanner.nextLine();
                     try {
-                        Double newBalance = userService.deposit(cardNumber, depositAmount);
+                        Double newBalance = userService.deposit(accNumber, depositAmount);
                         System.out.println("Deposit successful! New balance: " + newBalance);
                     } catch (RuntimeException e) {
                         System.out.println("Error: " + e.getMessage());
@@ -125,7 +125,7 @@ public class AtmConsole implements CommandLineRunner {
                     System.out.print("Enter new PIN: ");
                     String newPin = scanner.nextLine();
                     try {
-                        System.out.println(userService.resetPin(cardNumber, oldPin, newPin));
+                        System.out.println(userService.resetPin(accNumber, oldPin, newPin));
                     } catch (RuntimeException e) {
                         System.out.println("Error: " + e.getMessage());
                     }
@@ -155,7 +155,7 @@ public class AtmConsole implements CommandLineRunner {
 
             switch (choice) {
                 case 1:
-                    System.out.print("Enter new card number: ");
+                    System.out.print("Enter new Account number: ");
                     String newCard = scanner.nextLine();
                     System.out.print("Enter PIN for new user: ");
                     String newPin = scanner.nextLine();
@@ -166,7 +166,7 @@ public class AtmConsole implements CommandLineRunner {
                     break;
 
                 case 2:
-                    System.out.print("Enter card number to delete: ");
+                    System.out.print("Enter Account number to delete: ");
                     String deleteCard = scanner.nextLine();
                     userService.deleteUser(deleteCard); // We'll add this in service
                     System.out.println("User deleted successfully.");

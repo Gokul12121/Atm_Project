@@ -17,7 +17,7 @@ public class User {
     private Long id;
 
     @Column(nullable = false,unique = true)
-    private String cardNumber;
+    private String accNumber;
 
     @Column(nullable = false)
     private String pin;
